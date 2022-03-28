@@ -2,6 +2,7 @@ package be.pxl.superhero.repository;
 
 import be.pxl.superhero.builder.SuperheroBuilder;
 import be.pxl.superhero.domain.Superhero;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +26,7 @@ public class SuperheroRepositoryTest {
 	@Autowired
 	private SuperheroRepository superheroRepository;
 
-	private Superhero superhero = SuperheroBuilder.aSuperhero().withFirstName("Clark").withLastName("Kent").withSuperheroName(SUPERHERO_NAME).build();
+	private Superhero superhero = SuperheroBuilder.aSuperhero().build();
 
 	@BeforeEach
 	public void init() {

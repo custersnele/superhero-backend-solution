@@ -19,6 +19,7 @@ import static be.pxl.superhero.builder.SuperheroRequestBuilder.LASTNAME;
 import static be.pxl.superhero.builder.SuperheroRequestBuilder.SUPERHERO_NAME;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.verify;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest
@@ -38,6 +39,7 @@ public class SuperheroControllerCreateSuperheroTest {
 						.content(asJsonString(SuperheroRequestBuilder.aSuperheroRequest().withLastName("").build()))
 						.contentType(MediaType.APPLICATION_JSON)
 						.accept(MediaType.APPLICATION_JSON))
+				.andDo(print())
 				.andExpect(status().isBadRequest());
 	}
 

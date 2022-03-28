@@ -18,6 +18,7 @@ import static be.pxl.superhero.builder.SuperheroDTOBuilder.SUPERHERO_ID;
 import static be.pxl.superhero.builder.SuperheroDTOBuilder.SUPERHERO_NAME;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest
@@ -30,10 +31,12 @@ public class SuperheroControllerGetSuperheroTest {
 
 	@Test
 	public void getSuperheroByIdReturnsExistingSuperhero() throws Exception {
-		when(superheroService.findSuperheroById(SUPERHERO_ID)).thenReturn(SuperheroDTOBuilder.aSuperheroDTO().build());
+		when(superheroService.findSuperheroById(SUPERHERO_ID))
+				.thenReturn(SuperheroDTOBuilder.aSuperheroDTO().build());
 		mockMvc.perform( MockMvcRequestBuilders
 						.get("/superheroes/{id}", SUPERHERO_ID)
 						.accept(MediaType.APPLICATION_JSON))
+				.andDo(print())
 				.andExpect(status().isOk())
 				.andExpect(MockMvcResultMatchers.jsonPath("$.id").value(SUPERHERO_ID))
 				.andExpect(MockMvcResultMatchers.jsonPath("$.firstName").value(FIRSTNAME))
@@ -47,6 +50,7 @@ public class SuperheroControllerGetSuperheroTest {
 		mockMvc.perform( MockMvcRequestBuilders
 						.get("/superheroes/{id}", SUPERHERO_ID)
 						.accept(MediaType.APPLICATION_JSON))
+				.andDo(print())
 				.andExpect(status().isNotFound());
 	}
 

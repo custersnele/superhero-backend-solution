@@ -34,6 +34,10 @@ public class Superhero {
 		return id;
 	}
 
+	public void setId(Long id) {
+		this.id = id;
+	}
+
 	public String getFirstName() {
 		return firstName;
 	}
@@ -56,5 +60,24 @@ public class Superhero {
 
 	public void setSuperheroName(String superheroName) {
 		this.superheroName = superheroName;
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) {
+			return true;
+		}
+		if (o == null || getClass() != o.getClass()) {
+			return false;
+		}
+
+		Superhero superhero = (Superhero) o;
+
+		return id != null ? id.equals(superhero.id) : superhero.id == null;
+	}
+
+	@Override
+	public int hashCode() {
+		return id != null ? id.hashCode() : 0;
 	}
 }
