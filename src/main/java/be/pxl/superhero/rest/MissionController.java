@@ -36,7 +36,7 @@ public final class MissionController {
 	}
 
 	@GetMapping("/{missionId}")
-	public MissionDTO getSuperheroById(@PathVariable Long missionId) {
+	public MissionDTO getMissionById(@PathVariable Long missionId) {
 		return missionService.findMissionById(missionId);
 	}
 	
