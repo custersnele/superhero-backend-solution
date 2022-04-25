@@ -29,5 +29,4 @@ public class SuperheroRequest {
 	public String getSuperheroName() {
 		return superheroName;
 	}
-
 }

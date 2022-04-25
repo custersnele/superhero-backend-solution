@@ -1,14 +1,18 @@
 package be.pxl.superhero.service.impl;
 
 import be.pxl.superhero.api.SuperheroDTO;
+import be.pxl.superhero.api.SuperheroDetailDTO;
 import be.pxl.superhero.api.SuperheroRequest;
+import be.pxl.superhero.domain.Mission;
 import be.pxl.superhero.domain.Superhero;
 import be.pxl.superhero.exception.ResourceNotFoundException;
+import be.pxl.superhero.repository.MissionRepository;
 import be.pxl.superhero.repository.SuperheroRepository;
 import be.pxl.superhero.service.SuperheroService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import javax.validation.ValidationException;
 import java.util.List;
 import java.util.Optional;
@@ -18,10 +22,12 @@ import java.util.stream.Collectors;
 public class SuperheroServiceImpl implements SuperheroService {
 
 	private final SuperheroRepository superheroRepository;
+	private final MissionRepository missionRepository;
 
 	@Autowired
-	public SuperheroServiceImpl(SuperheroRepository superheroRepository) {
+	public SuperheroServiceImpl(SuperheroRepository superheroRepository, MissionRepository missionRepository) {
 		this.superheroRepository = superheroRepository;
+		this.missionRepository = missionRepository;
 	}
 
 	public List<SuperheroDTO> findAllSuperheroes() {
@@ -29,8 +35,8 @@ public class SuperheroServiceImpl implements SuperheroService {
 				.stream().map(SuperheroDTO::new).collect(Collectors.toList());
 	}
 
-	public SuperheroDTO findSuperheroById(Long superheroId) {
-		return superheroRepository.findById(superheroId).map(SuperheroDTO::new)
+	public SuperheroDetailDTO findSuperheroById(Long superheroId) {
+		return superheroRepository.findById(superheroId).map(SuperheroDetailDTO::new)
 				.orElseThrow(() -> new ResourceNotFoundException("Superhero", "ID", superheroId));
 	}
 
@@ -63,5 +69,12 @@ public class SuperheroServiceImpl implements SuperheroService {
 					return true;
 				}).orElseThrow(() -> new ResourceNotFoundException("Superhero", "id", superheroId));
 
+	}
+
+	@Transactional
+	public void addSuperheroToMission(Long superheroId, Long missionId) {
+		Superhero superhero = superheroRepository.findById(superheroId).orElseThrow(() -> new ResourceNotFoundException("Superhero", "ID", superheroId));
+		Mission mission = missionRepository.findById(missionId).orElseThrow(() -> new ResourceNotFoundException("Mission", "ID", missionId));
+		superhero.addMission(mission);
 	}
 }

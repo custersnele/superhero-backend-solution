@@ -27,7 +27,6 @@ public class ValidatedExceptionHandler {
 
 
 	private static class ErrorResponseBody {
-
 		private final String message;
 		private final List<String> errors;
 

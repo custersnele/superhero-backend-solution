@@ -1,6 +1,8 @@
 package be.pxl.superhero.rest;
 
+import be.pxl.superhero.api.HeroMissionRequest;
 import be.pxl.superhero.api.SuperheroDTO;
+import be.pxl.superhero.api.SuperheroDetailDTO;
 import be.pxl.superhero.api.SuperheroRequest;
 import be.pxl.superhero.service.SuperheroService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,13 +37,19 @@ public final class SuperheroController {
 	}
 
 	@GetMapping("/{superheroId}")
-	public SuperheroDTO getSuperheroById(@PathVariable Long superheroId) {
+	public SuperheroDetailDTO getSuperheroById(@PathVariable Long superheroId) {
 		return superheroService.findSuperheroById(superheroId);
 	}
 	
 	@PostMapping
 	public ResponseEntity<SuperheroDTO> createSuperhero(@Valid @RequestBody SuperheroRequest superheroRequest) {
 		return new ResponseEntity<>(superheroService.createSuperhero(superheroRequest), HttpStatus.CREATED);
+	}
+
+	@PostMapping("add-superhero-to-mission")
+	public ResponseEntity<Void> addSuperheroToMission(@RequestBody HeroMissionRequest heroMissionRequest) {
+		superheroService.addSuperheroToMission(heroMissionRequest.getSuperheroId(), heroMissionRequest.getMissionId());
+		return new ResponseEntity<>(HttpStatus.ACCEPTED);
 	}
 	
 	@PutMapping("/{superheroId}")

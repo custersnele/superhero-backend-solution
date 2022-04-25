@@ -1,11 +1,15 @@
 package be.pxl.superhero.domain;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.persistence.Table;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name="superheroes")
@@ -19,6 +23,8 @@ public class Superhero {
 	private String lastName;
 	@Column(unique = true)
 	private String superheroName;
+	@ManyToMany(cascade = CascadeType.MERGE)
+	private List<Mission> missions = new ArrayList<>();
 
 	public Superhero() {
 		// JPA only
@@ -74,6 +80,25 @@ public class Superhero {
 		Superhero superhero = (Superhero) o;
 
 		return id != null ? id.equals(superhero.id) : superhero.id == null;
+	}
+
+	public void addMission(Mission mission) {
+		if (mission.isCompleted() || mission.isDeleted()) {
+			throw new IllegalArgumentException("This mission was already completed or deleted.");
+		}
+		if (onMission(mission)) {
+			throw new IllegalArgumentException("This mission was already assigned.");
+		}
+		missions.add(mission);
+		mission.addSuperhero(this);
+	}
+
+	public boolean onMission(Mission mission) {
+		return missions.stream().anyMatch(m -> m.getName().equals(mission.getName()));
+	}
+
+	public List<Mission> getMissions() {
+		return missions;
 	}
 
 	@Override

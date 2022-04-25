@@ -22,7 +22,7 @@ import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest
+@WebMvcTest(controllers = SuperheroController.class)
 public class SuperheroControllerCreateSuperheroTest {
 	@MockBean
 	private SuperheroService superheroService;
@@ -35,8 +35,12 @@ public class SuperheroControllerCreateSuperheroTest {
 
 	@Test
 	public void testLastNameIsRequired() throws Exception {
+		SuperheroRequest superheroRequest = SuperheroRequestBuilder
+				.aSuperheroRequest()
+				.withLastName("")
+				.build();
 		mockMvc.perform(MockMvcRequestBuilders.post("/superheroes")
-						.content(asJsonString(SuperheroRequestBuilder.aSuperheroRequest().withLastName("").build()))
+						.content(asJsonString(superheroRequest))
 						.contentType(MediaType.APPLICATION_JSON)
 						.accept(MediaType.APPLICATION_JSON))
 				.andDo(print())
@@ -45,8 +49,12 @@ public class SuperheroControllerCreateSuperheroTest {
 
 	@Test
 	public void testLastNameWithOneCharacterIsNotValid() throws Exception {
+		SuperheroRequest superheroRequest = SuperheroRequestBuilder
+				.aSuperheroRequest()
+				.withLastName("A")
+				.build();
 		mockMvc.perform(MockMvcRequestBuilders.post("/superheroes")
-						.content(asJsonString(SuperheroRequestBuilder.aSuperheroRequest().withLastName("A").build()))
+						.content(asJsonString(superheroRequest))
 						.contentType(MediaType.APPLICATION_JSON)
 						.accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().isBadRequest());
@@ -55,8 +63,12 @@ public class SuperheroControllerCreateSuperheroTest {
 
 	@Test
 	public void testSuperheroNameIsRequired() throws Exception {
+		SuperheroRequest superheroRequest = SuperheroRequestBuilder
+				.aSuperheroRequest()
+				.withSuperheroName("")
+				.build();
 		mockMvc.perform(MockMvcRequestBuilders.post("/superheroes")
-						.content(asJsonString(SuperheroRequestBuilder.aSuperheroRequest().withSuperheroName("").build()))
+						.content(asJsonString(superheroRequest))
 						.contentType(MediaType.APPLICATION_JSON)
 						.accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().isBadRequest());
@@ -64,8 +76,9 @@ public class SuperheroControllerCreateSuperheroTest {
 
 	@Test
 	public void testSuperheroIsCreatedWhenAllConstraintsSatified() throws Exception {
+		SuperheroRequest superheroRequest = SuperheroRequestBuilder.aSuperheroRequest().build();
 		mockMvc.perform(MockMvcRequestBuilders.post("/superheroes")
-						.content(asJsonString(SuperheroRequestBuilder.aSuperheroRequest().build()))
+						.content(asJsonString(superheroRequest))
 						.contentType(MediaType.APPLICATION_JSON)
 						.accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().isCreated());
@@ -83,5 +96,4 @@ public class SuperheroControllerCreateSuperheroTest {
 			throw new RuntimeException(e);
 		}
 	}
-
 }
