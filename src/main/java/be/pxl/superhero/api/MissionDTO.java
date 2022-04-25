@@ -1,9 +1,6 @@
 package be.pxl.superhero.api;
 
 import be.pxl.superhero.domain.Mission;
-import net.bytebuddy.implementation.bind.annotation.Super;
-
-import java.util.List;
 
 public class MissionDTO {
 
@@ -11,7 +8,6 @@ public class MissionDTO {
 	private String missionName;
 	private boolean completed;
 	private boolean deleted;
-	private List<SuperheroDTO> superheroes;
 
 	public MissionDTO(Mission mission) {
 		this.id = mission.getId();
@@ -39,7 +35,19 @@ public class MissionDTO {
 		return deleted;
 	}
 
-	public List<SuperheroDTO> getSuperheroes() {
-		return superheroes;
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public void setMissionName(String missionName) {
+		this.missionName = missionName;
+	}
+
+	public void setCompleted(boolean completed) {
+		this.completed = completed;
+	}
+
+	public void setDeleted(boolean deleted) {
+		this.deleted = deleted;
 	}
 }

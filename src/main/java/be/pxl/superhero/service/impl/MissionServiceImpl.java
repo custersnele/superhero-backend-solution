@@ -12,7 +12,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import javax.validation.ValidationException;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -37,11 +39,17 @@ public class MissionServiceImpl implements MissionService {
 
 	@Override
 	public MissionDTO createMission(CreateMissionRequest missionRequest) {
+		Optional<Mission> missionByName = missionRepository.findMissionByName(missionRequest.getMissionName());
+		if (missionByName.isPresent()) {
+			throw new ValidationException("Name already exists");
+		}
 		Mission mission = new Mission();
 		mission.setName(missionRequest.getMissionName());
 		Mission savedMission = missionRepository.save(mission);
 		return new MissionDTO(savedMission);
 	}
+
+
 
 	@Transactional
 	public MissionDetailDTO updateMission(Long missionId, UpdateMissionRequest missionRequest) {
